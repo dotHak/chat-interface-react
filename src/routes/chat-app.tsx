@@ -27,7 +27,7 @@ const sendSocketMessage = (
             scrollEl?.scrollIntoView({
                 behavior: "smooth",
                 block: "end",
-                inline: "nearest",
+                inline: "end",
             }),
         100,
     );
@@ -54,7 +54,7 @@ export const ChatApp: React.FC = () => {
 
     return (
         <div className="px-4 w-full h-full max-h-screen flex flex-col justify-center items-center xl:px-0">
-            <ScrollArea className="basis-full w-full pt-6 flex justify-center">
+            <ScrollArea className="basis-full w-full pt-6 flex justify-center scroll-smooth">
                 <Messages
                     messages={chatHistory}
                     isLoading={isLoading}

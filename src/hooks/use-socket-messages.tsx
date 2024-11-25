@@ -3,7 +3,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { LoadingStep } from "@/components/server-loader";
 import { createId } from "@paralleldrive/cuid2";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Doctor } from "@/components/doctors-list";
 
@@ -74,6 +74,18 @@ export const useSocketMessages = ({
     );
     const navigate = useNavigate();
 
+    const scrollLastMessageIntoView = useCallback(() => {
+        setTimeout(
+            () =>
+                lastChatMessageRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "start",
+                }),
+            200,
+        );
+    }, [lastChatMessageRef]);
+
     useEffect(() => {
         if (lastMessage?.data) {
             const data = JSON.parse(lastMessage.data);
@@ -90,14 +102,7 @@ export const useSocketMessages = ({
                         }),
                     );
 
-                    setTimeout(
-                        () =>
-                            lastChatMessageRef.current?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                            }),
-                        100,
-                    );
+                    scrollLastMessageIntoView();
                 } else if (data.type === "availability-list") {
                     setIsLoading(false);
                     setLoadingSteps([]);
@@ -112,14 +117,7 @@ export const useSocketMessages = ({
                             availabilities: data.availability,
                         }),
                     );
-                    setTimeout(
-                        () =>
-                            lastChatMessageRef.current?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                            }),
-                        100,
-                    );
+                    scrollLastMessageIntoView();
                 } else if (data.type === "doctors-list") {
                     setIsLoading(false);
                     setLoadingSteps([]);
@@ -134,14 +132,8 @@ export const useSocketMessages = ({
                             doctors: data.doctors,
                         }),
                     );
-                    setTimeout(
-                        () =>
-                            lastChatMessageRef.current?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                            }),
-                        100,
-                    );
+
+                    scrollLastMessageIntoView();
                 } else if (
                     data.type === "loading-state" &&
                     data.state === "done"
@@ -175,7 +167,7 @@ export const useSocketMessages = ({
                 }
             }
         }
-    }, [lastMessage?.data]);
+    }, [lastMessage?.data, scrollLastMessageIntoView]);
 
     useEffect(() => {
         if (lastPrompt) {
