@@ -6,7 +6,6 @@ import { createId } from "@paralleldrive/cuid2";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Doctor } from "@/components/doctors-list";
-import { getWebSocketUrl } from "@/lib/utils";
 
 type ServerResponse =
     | {
@@ -62,8 +61,11 @@ export const useSocketMessages = ({
     clientId: string;
     lastPrompt: string | undefined;
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingSteps, setLoadingSteps] = useState<LoadingStep[]>([]);
+    const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
     const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
-        `${getWebSocketUrl()}/${clientId}`,
+        `${import.meta.env.VITE_BACKEND_WS_URI}/${clientId}`,
         {
             shouldReconnect: () => true,
             reconnectAttempts: 100,
@@ -71,9 +73,6 @@ export const useSocketMessages = ({
         },
     );
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
-    const [loadingSteps, setLoadingSteps] = useState<LoadingStep[]>([]);
-    const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
     useEffect(() => {
         if (lastMessage?.data) {

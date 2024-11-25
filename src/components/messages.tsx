@@ -88,7 +88,6 @@ export const Messages = forwardRef<HTMLUListElement, MessagesProps>(
         { messages, isLoading, loadingSteps, lastChatMessageRef, onSubmit },
         ref,
     ) => {
-        console.log(messages);
         return (
             <ul
                 ref={ref}

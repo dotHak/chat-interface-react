@@ -37,6 +37,24 @@ http://localhost:5173/
 ```
 npm run build
 ```
-NOTE: The build artifacts is served by FastApi server in the `chat_interface` directory. Make sure both `chat-react` and `chat_interface` are in the same parent directory.
+- Run the following command to start the server in production mode:
+```
+npm run preview
+```
+- Open the url in your browser to view the project.
 
-- Run the `chat_interface` server to see the changes
+
+## Deployment
+### Prerequisites
+- SST (Serverless Stack Toolkit) CLI. You can read more [here](https://sst.dev/docs)
+- AWS Account
+- AWS CLI
+
+### Deployment Steps
+- Create a `.env.production.local` file in the root directory of the project and add the environment variables mentioned above.
+- Build the project like mentioned above.
+- Update the configuration in `sst.config.ts` to match your AWS account or resources.
+- Run the following command to deploy the project:
+```
+npx sst deploy --stage production
+```

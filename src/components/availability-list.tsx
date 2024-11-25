@@ -98,7 +98,7 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
                     </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="">
                     <div className="mt-1 prose prose-h1:text-3xl max-w-full basis-auto">
                         <Markdown remarkPlugins={[remarkGfm]}>
                             {messageBefore}
@@ -140,7 +140,7 @@ export const AvailabilityList: React.FC<AvailabilityListProps> = ({
                             </Button>
                         </div>
 
-                        <ul className="flex gap-4 flex-wrap">
+                        <ul className="flex gap-3 flex-wrap">
                             {slots[days[currentDay]].map((slot, slotIdx) => (
                                 <li
                                     key={`${slot.startDateTime.toISOString()}-${slot.endDateTime.toISOString()}`}
@@ -198,7 +198,7 @@ const Slot: React.FC<
     return (
         <Button
             className={cn(
-                "w-38 text-gray-700 hover:border-green-400 hover:bg-background xl:w-40",
+                "w-40 text-gray-700 hover:border-green-400 hover:bg-background",
                 isActive
                     ? "bg-green-50 text-green-900 border-green-400"
                     : "bg-background text-gray-700 border-input",
