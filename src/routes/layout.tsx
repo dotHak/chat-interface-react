@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Outlet } from "react-router-dom";
+import { ChatContainer } from "@/routes/chat-container";
+import { Toaster } from "react-hot-toast";
 
 export function Layout() {
     return (
@@ -12,8 +13,9 @@ export function Layout() {
                     hideWhenOpen
                     className="absolute inset-0 z-30"
                 />
-                <Outlet />
+                <ChatContainer />
             </main>
+            <Toaster position="top-right" reverseOrder={false} />
         </SidebarProvider>
     );
 }

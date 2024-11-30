@@ -103,7 +103,7 @@ export const DoctorsList: React.FC<DoctorsListProps> = ({
                                                                         )}
                                                                     />
                                                                 </FormControl>
-                                                                <FormLabel className="font-normal text-sm text-gray-800">
+                                                                <FormLabel className="font-normal text-sm text-gray-800 cursor-pointer">
                                                                     <span className="font-semibold">
                                                                         {
                                                                             doctor.name

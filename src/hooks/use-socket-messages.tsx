@@ -1,10 +1,9 @@
 import { ChatMessage, Availability } from "@/components/messages";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import { LoadingStep } from "@/components/server-loader";
 import { createId } from "@paralleldrive/cuid2";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { Doctor } from "@/components/doctors-list";
 
 type ServerResponse =
@@ -52,19 +51,47 @@ const isServerLoaderStep = (data: unknown): data is ServerResponse => {
     );
 };
 
+const sendSocketMessage = (
+    message: string,
+    setChatHistory: (value: React.SetStateAction<ChatMessage[]>) => void,
+    sendMessage: (mesage: string) => void,
+    scrollEl: React.RefObject<HTMLUListElement | null>,
+) => {
+    setChatHistory((prevChat) =>
+        prevChat.concat({
+            id: createId(),
+            text: message.replace(/\n/g, "<br>"),
+            role: "user",
+            type: "chat-message",
+        }),
+    );
+
+    setTimeout(
+        () =>
+            scrollEl.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+                inline: "end",
+            }),
+        100,
+    );
+
+    sendMessage(message);
+};
+
 export const useSocketMessages = ({
     lastChatMessageRef,
-    lastPrompt,
     clientId,
+    scrollAreaRef,
 }: {
     lastChatMessageRef: React.RefObject<HTMLLIElement | null>;
+    scrollAreaRef: React.RefObject<HTMLUListElement | null>;
     clientId: string;
-    lastPrompt: string | undefined;
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingSteps, setLoadingSteps] = useState<LoadingStep[]>([]);
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-    const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
+    const { sendJsonMessage, lastMessage } = useWebSocket(
         `${import.meta.env.VITE_BACKEND_WS_URI}/${clientId}`,
         {
             shouldReconnect: () => true,
@@ -72,8 +99,6 @@ export const useSocketMessages = ({
             reconnectInterval: 1000,
         },
     );
-    const navigate = useNavigate();
-
     const scrollLastMessageIntoView = useCallback(() => {
         setTimeout(
             () =>
@@ -169,37 +194,19 @@ export const useSocketMessages = ({
         }
     }, [lastMessage?.data, scrollLastMessageIntoView]);
 
-    useEffect(() => {
-        if (lastPrompt) {
-            if (readyState === ReadyState.OPEN) {
-                if (chatHistory.length === 0) {
-                    setChatHistory((prevChat) =>
-                        prevChat.concat({
-                            id: createId(),
-                            text: lastPrompt,
-                            role: "user",
-                            type: "chat-message",
-                        }),
-                    );
-
-                    sendJsonMessage({
-                        message: lastPrompt,
-                        restart: true,
-                    });
-                    window.history.replaceState({}, "");
-                }
-            }
-        } else {
-            navigate("/");
-        }
-    }, [readyState, lastPrompt]);
-
     return {
         chatHistory,
         isLoading,
         loadingSteps,
-        sendMessage: (message: string) => {
-            sendJsonMessage({ message, restart: false });
+        sendMessage: (message: string, restart: boolean = false) => {
+            sendSocketMessage(
+                message,
+                setChatHistory,
+                (msg) => {
+                    sendJsonMessage({ message: msg, restart });
+                },
+                scrollAreaRef,
+            );
         },
         setChatHistory,
     };

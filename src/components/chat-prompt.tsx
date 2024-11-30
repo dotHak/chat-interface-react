@@ -63,7 +63,7 @@ export function ChatPrompt({
                     Please enter your chat prompt.
                 </label>
                 <Textarea
-                    placeholder="Ask AI a question or book appointment with a doctor."
+                    placeholder="Ask a question or book appointment with a doctor"
                     className="min-h-fit max-h-32 resize-none focus-visible:ring-0 border-none shadow-none"
                     {...restProps}
                     ref={(tRef) => {
