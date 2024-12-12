@@ -6,9 +6,5 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
-    "Web": {
-      "type": "sst.aws.StaticSite"
-      "url": string
-    }
   }
 }

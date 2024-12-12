@@ -19,7 +19,7 @@ export const ChatContainer: React.FC = () => {
         });
 
     return (
-        <div className="px-4 w-full h-full max-h-screen flex flex-col justify-center items-center xl:px-0">
+        <div className="px-4 w-full h-full max-h-dvh flex flex-col justify-center items-center xl:px-0">
             {chatHistory.length > 0 ? (
                 <ChatMessages
                     chatHistory={chatHistory}

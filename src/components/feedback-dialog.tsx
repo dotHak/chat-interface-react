@@ -31,6 +31,8 @@ const postfeedback = async (
 ) => {
     return await fetch(`${import.meta.env.VITE_BACKEND_URL}/feedback`, {
         method: "POST",
+        mode: "cors",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },

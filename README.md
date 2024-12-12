@@ -18,6 +18,7 @@ npm install
 - Create a `.env.development.local` file in the root directory of the project and add the following environment variables:
 ```
 VITE_BACKEND_WS_URI=ws://localhost:8000/ws
+VITE_BACKEND_URL=http://localhost:8000
 ```
 
 - Run the following command to start the server in development mode:
